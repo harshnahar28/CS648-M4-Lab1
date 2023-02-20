@@ -17,18 +17,7 @@ addEmployee.addEventListener('submit', (x) => {
   const email = document.getElementById("email").value;
   const department = document.getElementById("department").value;
 
-  const employeeRowNew = document.createElement('tr');
-  employeeRowNew.innerHTML = `
-    <td>${id}</td>
-    <td>${name}</td>
-    <td>${extension}</td>
-    <td>${email}</td>
-    <td>${department}</td>
-    <td>
-      <button class="btn btn-danger btn-sm deleteEmployeeBtn">Delete</button>
-    </td>
-  `;
-  employees.appendChild(employeeRowNew);
+  addEmployeeToTable(id, name, extension, email, department);
   
   addEmployee.reset(); //Upon submission, the form should completely clear itself of the entered values.
   addEmployee.elements.id.focus(); //Upon submission, the user’s cursor should immediately return to the Employee ID field.
@@ -37,16 +26,41 @@ addEmployee.addEventListener('submit', (x) => {
   var result = document.getElementById("empCount");
   result.value = numberOfEmployees;
 
-
 });
+
+
+const employeesTable = document.querySelector('#employees');
+
+function addEmployeeToTable(id, name, extension, email, department) {
+  const freshRow = employeesTable.insertRow();
+  const idCell = freshRow.insertCell();
+  const nameCell = freshRow.insertCell();
+  const extensionCell = freshRow.insertCell();
+  const emailCell = freshRow.insertCell();
+  const departmentCell = freshRow.insertCell();
+  const deleteBtnCell = freshRow.insertCell();
+
+  idCell.appendChild(document.createTextNode(id));
+  nameCell.appendChild(document.createTextNode(name));
+  extensionCell.appendChild(document.createTextNode(extension));
+  emailCell.appendChild(document.createTextNode(email));
+  departmentCell.appendChild(document.createTextNode(department));
+
+
+  const deleteButton = document.createElement('button');
+  deleteButton.classList.add('btn', 'btn-danger', 'btn-sm', 'deleteBtn');
+  deleteButton.textContent = 'X';
+
+  deleteBtnCell.appendChild(deleteButton);
+}
 
 
 const employeesDel = document.querySelector('#employees');
 
 employeesDel.addEventListener('click', (x) => {
-  if (x.target.classList.contains('deleteEmployeeBtn')) {
-    const shouldDelete = confirm('Are you sure you want to delete this employee?');
-    if (shouldDelete) {
+  if (x.target.classList.contains('deleteBtn')) {
+    const question = confirm('Do you want to delete this employee?');
+    if (question) {
       const row = x.target.closest('tr');
       employeesDel.deleteRow(row.rowIndex);
       numberOfEmployees--;
